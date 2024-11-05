@@ -6,3 +6,4 @@ pandas
 beautifulsoup4
 requests
 dash
+dash_bootstrap_components
