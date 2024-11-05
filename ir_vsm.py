@@ -49,64 +49,64 @@ nltk.download('punkt')
 
 #####################################################################################################
 
-# visited_urls = set()
-# output_dir = "crawled_pages"
+visited_urls = set()
+output_dir = "crawled_pages"
 
-# def crawl(seed_url, max_pages=250, delay=1, fail_delay=3, output_dir=output_dir):
-#     """Crawls web pages starting from a seed URL, up to a maximum number of pages."""
-#     if not os.path.exists(output_dir):
-#         os.makedirs(output_dir)
+def crawl(seed_url, max_pages=250, delay=1, fail_delay=3, output_dir=output_dir):
+    """Crawls web pages starting from a seed URL, up to a maximum number of pages."""
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
 
-#     queue = [seed_url]
-#     page_count = 0
+    queue = [seed_url]
+    page_count = 0
 
-#     while queue and page_count < max_pages:
-#         url = queue.pop(0)
-#         if url not in visited_urls:
-#             try:
-#                 response = requests.get(url, timeout=10)
-#                 response.raise_for_status()
+    while queue and page_count < max_pages:
+        url = queue.pop(0)
+        if url not in visited_urls:
+            try:
+                response = requests.get(url, timeout=10)
+                response.raise_for_status()
 
-#                 save_page(url, response.text, output_dir)
+                save_page(url, response.text, output_dir)
 
-#                 visited_urls.add(url)
-#                 page_count += 1
+                visited_urls.add(url)
+                page_count += 1
 
-#                 print(f"Page {page_count}: {url} crawled successfully.")
+                print(f"Page {page_count}: {url} crawled successfully.")
 
-#                 soup = BeautifulSoup(response.text, 'html.parser')
-#                 for link in soup.find_all('a', href=True):
-#                     absolute_url = urljoin(url, link['href'])
+                soup = BeautifulSoup(response.text, 'html.parser')
+                for link in soup.find_all('a', href=True):
+                    absolute_url = urljoin(url, link['href'])
 
-#                     if is_valid(absolute_url, seed_url) and absolute_url not in visited_urls:
-#                         queue.append(absolute_url)
+                    if is_valid(absolute_url, seed_url) and absolute_url not in visited_urls:
+                        queue.append(absolute_url)
 
-#                 time.sleep(2)
+                time.sleep(2)
 
-#             except requests.RequestException as e:
-#                 print(f"Failed to crawl {url}: {e}")
-#                 print(f"Resting for {fail_delay} seconds before retrying.")
-#                 time.sleep(fail_delay)
-#                 continue
-
-
-# def save_page(url, content, output_dir):
-#     """Saves the content of a web page to a file in the specified directory."""
-#     parsed_url = urlparse(url)
-#     file_name = f"{parsed_url.netloc}{parsed_url.path}".replace("/", "_").strip("_") + ".html"
-#     file_path = os.path.join(output_dir, file_name)
-
-#     with open(file_path, 'w', encoding='utf-8') as f:
-#         f.write(content)
+            except requests.RequestException as e:
+                print(f"Failed to crawl {url}: {e}")
+                print(f"Resting for {fail_delay} seconds before retrying.")
+                time.sleep(fail_delay)
+                continue
 
 
-# def is_valid(url, seed_url):
-#     """Checks if a URL is valid for crawling (same domain as seed URL)."""
-#     return urlparse(url).netloc == urlparse(seed_url).netloc
+def save_page(url, content, output_dir):
+    """Saves the content of a web page to a file in the specified directory."""
+    parsed_url = urlparse(url)
+    file_name = f"{parsed_url.netloc}{parsed_url.path}".replace("/", "_").strip("_") + ".html"
+    file_path = os.path.join(output_dir, file_name)
 
-# if __name__ == "__main__":
-#     seed_page = "https://www.ted.com/talks"
-#     crawl(seed_page, max_pages=250, delay=1, fail_delay=3)
+    with open(file_path, 'w', encoding='utf-8') as f:
+        f.write(content)
+
+
+def is_valid(url, seed_url):
+    """Checks if a URL is valid for crawling (same domain as seed URL)."""
+    return urlparse(url).netloc == urlparse(seed_url).netloc
+
+if __name__ == "__main__":
+    seed_page = "https://www.ted.com/talks"
+    crawl(seed_page, max_pages=250, delay=1, fail_delay=3)
 
 """## Indexing"""
 
